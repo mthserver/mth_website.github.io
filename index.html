@@ -3,26 +3,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Мой красивый сайт</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Информационное ТВ Школы</title>
+
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; }
+        header { background-color: #007bff; color: white; text-align: center; padding: 20px; }
+        section { padding: 20px; }
+        #current-lesson-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            width: 300px;
+        }
+        #id_clock {
+            font-size: 48px;
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
 </head>
+
 <body>
-    <header>
-        <h1>Привет, GitHub Pages!</h1>
-        <p>Это мой первый красивый сайт.</p>
-    </header>
 
-    <main>
-        <section class="buttons">
-            <h2>Наши кнопки</h2>
-            <button onclick="alert('Вы нажали первую кнопку!')">Кнопка 1</button>
-            <button onclick="alert('Вы нажали вторую кнопку!')">Кнопка 2</button>
-            <button onclick="alert('Вы нажали третью кнопку!')">Кнопка 3</button>
-        </section>
-    </main>
+<header>
+    <h1>Информационное ТВ Школы №385</h1>
+</header>
 
-    <footer>
-        <p>© 2025 Мой сайт на GitHub Pages</p>
-    </footer>
+<!-- ЦИФРОВЫЕ ЧАСЫ -->
+<h1><div id="id_clock"></div></h1>
+
+<script>
+function digitalClock() {
+    let date = new Date();
+    let h = String(date.getHours()).padStart(2, '0');
+    let m = String(date.getMinutes()).padStart(2, '0');
+    let s = String(date.getSeconds()).padStart(2, '0');
+
+    document.getElementById("id_clock").innerHTML = h + ":" + m + ":" + s;
+    setTimeout(digitalClock, 1000);
+}
+digitalClock();
+</script>
+
+<section>
+    <h2>Текущий урок</h2>
+
+    <div id="current-lesson-box">
+        <h3 id="lesson-name">Определение...</h3>
+        <p id="lesson-time"></p>
+    </div>
+
+<script>
+    // Таблица расписания (одна таблица!)
+    const lessons = [
+        { name: "Урок 1", start: "09:00", end: "09:40" },
+        { name: "Перемена", start: "09:40", end: "10:00" },
+
+        { name: "Урок 2", start: "10:00", end: "10:40" },
+        { name: "Перемена", start: "10:40", end: "11:00" },
+
+        { name: "Урок 3", start: "11:00", end: "11:40" },
+        { name: "Перемена", start: "11:40", end: "12:00" },
+
+        { name: "Урок 4", start: "12:00", end: "12:40" },
+        { name: "Перемена", start: "12:40", end: "13:00" },
+
+        { name: "Урок 5", start: "13:00", end: "13:40" },
+        { name: "Перемена", start: "13:40", end: "13:55" },
+
+        { name: "Урок 6", start: "13:55", end: "14:35" },
+        { name: "Перемена", start: "14:35", end: "14:45" },
+
+        { name: "Урок 7", start: "14:45", end: "15:25" },
+        { name: "Перемена", start: "15:25", end: "15:35" },
+
+        { name: "Урок 8", start: "15:35", end: "16:15" }
+    ];
+
+    function toMinutes(t) {
+        let [h, m] = t.split(":").map(Number);
+        return h * 60 + m;
+    }
+
+    function updateLesson() {
+        let now = new Date();
+        let minutes = now.getHours() * 60 + now.getMinutes();
+
+        let current = lessons.find(l =>
+            minutes >= toMinutes(l.start) && minutes < toMinutes(l.end)
+        );
+
+        if (current) {
+            document.getElementById("lesson-name").innerText = current.name;
+            document.getElementById("lesson-time").innerText = current.start + " — " + current.end;
+        } else {
+            document.getElementById("lesson-name").innerText = "Нет уроков";
+            document.getElementById("lesson-time").innerText = "";
+        }
+    }
+
+    setInterval(updateLesson, 5000);
+    updateLesson();
+</script>
+</section>
+
+<!-- Блок с вставкой таблицы по дням (ваши iframe) -->
+<section>
+    <div id="image-container"></div>
+
+<script>
+    const images = [
+        './tabl/vs.html',
+        './tabl/pn.html',
+        './tabl/vt.html',
+        './tabl/sr.html',
+        './tabl/cht.html',
+        './tabl/pt.html',
+        './tabl/sb.html'
+    ];
+
+    document.getElementById("image-container").innerHTML =
+        `<iframe src="${images[new Date().getDay()]}" height="350" width="800" style="border:0;"></iframe>`;
+</script>
+</section>
+
+<!-- Видео блок -->
+<section>
+    <video id="main-video" width="640" height="500" autoplay muted></video>
+
+<script>
+    const videoSources = [
+        { src: 'https://samplelib.com/lib/preview/mp4/sample-5s.mp4', type: 'video/mp4' },
+        { src: './video/video2.mp4', type: 'video/mp4' },
+        { src: './video/video3.mp4', type: 'video/mp4' }
+    ];
+
+    let videoIndex = 0;
+
+    function loadVideo() {
+        const video = document.getElementById('main-video');
+        video.innerHTML = `<source src="${videoSources[videoIndex].src}" type="${videoSources[videoIndex].type}">`;
+        video.load();
+        video.play();
+        videoIndex++;
+    }
+
+    document.getElementById('main-video').addEventListener('ended', () => {
+        if (videoIndex < videoSources.length) loadVideo();
+        else location.reload();
+    });
+
+    window.onload = loadVideo;
+</script>
+</section>
+
 </body>
 </html>
